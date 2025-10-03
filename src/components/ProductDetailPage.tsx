@@ -1,4 +1,4 @@
-import { Star, Heart, ShoppingCart, Minus, Plus, Check, Leaf, Award, Clock } from 'lucide-react';
+import { Star, Heart, ShoppingCart, Minus, Plus, Check, Leaf, Truck, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { Product } from '@/contexts/CartContext';
@@ -6,7 +6,6 @@ import { products } from '@/data/products';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { Separator } from './ui/separator';
 import {
   Carousel,
   CarouselContent,
@@ -19,20 +18,21 @@ import { toast } from 'sonner';
 const ProductDetailPage = () => {
   const { selectedProduct, addToCart, addToWishlist, setPage, setSelectedProduct } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
-  
-  // Generate multiple images for carousel (in real app, these would come from product data)
-  const productImages = [
-    selectedProduct?.image,
-    selectedProduct?.image,
-    selectedProduct?.image,
-    selectedProduct?.image,
-  ];
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // Generate multiple images for carousel
+  const productImages = selectedProduct ? [
+    selectedProduct.image,
+    selectedProduct.image,
+    selectedProduct.image,
+  ] : [];
 
   // Get related products
-  const relatedProducts = products
-    .filter(p => p.category === selectedProduct?.category && p.id !== selectedProduct?.id)
-    .slice(0, 4);
+  const relatedProducts = selectedProduct
+    ? products
+        .filter(p => p.category === selectedProduct.category && p.id !== selectedProduct.id)
+        .slice(0, 4)
+    : [];
 
   if (!selectedProduct) {
     return (
@@ -68,84 +68,77 @@ const ProductDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section with Breadcrumb */}
-      <div className="bg-secondary/30 border-b border-border">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <button onClick={() => setPage('home')} className="hover:text-primary transition-colors">
+    <div className="bg-background">
+      {/* Breadcrumb */}
+      <div className="border-b border-border bg-muted/30">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center gap-2 text-sm">
+            <button onClick={() => setPage('home')} className="text-muted-foreground hover:text-foreground">
               Home
             </button>
-            <span>/</span>
-            <button onClick={() => {
-              setPage('category');
-            }} className="hover:text-primary transition-colors capitalize">
+            <span className="text-muted-foreground">/</span>
+            <button onClick={() => setPage('category')} className="text-muted-foreground hover:text-foreground capitalize">
               {selectedProduct.category}
             </button>
-            <span>/</span>
-            <span className="text-foreground">{selectedProduct.name}</span>
+            <span className="text-muted-foreground">/</span>
+            <span className="text-foreground font-medium">{selectedProduct.name}</span>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8">
         {/* Main Product Section */}
-        <div className="grid lg:grid-cols-2 gap-12 mb-20">
-          {/* Left: Image Carousel */}
+        <div className="grid lg:grid-cols-2 gap-8 mb-16">
+          {/* Left: Images */}
           <div className="space-y-4">
-            <div className="relative aspect-square bg-secondary/20 rounded-2xl overflow-hidden border border-border group">
+            <div className="aspect-square bg-muted/30 rounded-xl overflow-hidden border border-border relative group">
               <img
-                src={productImages[selectedImage]}
+                src={productImages[selectedImageIndex]}
                 alt={selectedProduct.name}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-full object-contain p-8 transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute top-4 right-4 flex flex-col gap-2">
-                <Badge className="bg-primary text-primary-foreground shadow-lg">
-                  Fresh
-                </Badge>
-                <Badge variant="secondary" className="shadow-lg">
-                  Organic
-                </Badge>
+              <div className="absolute top-3 right-3">
+                <Badge className="bg-primary shadow-lg">Fresh</Badge>
               </div>
             </div>
             
-            {/* Thumbnail Carousel */}
-            <div className="grid grid-cols-4 gap-3">
+            {/* Thumbnails */}
+            <div className="grid grid-cols-3 gap-3">
               {productImages.map((img, idx) => (
                 <button
                   key={idx}
-                  onClick={() => setSelectedImage(idx)}
+                  onClick={() => setSelectedImageIndex(idx)}
                   className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImage === idx 
-                      ? 'border-primary shadow-md scale-105' 
+                    selectedImageIndex === idx 
+                      ? 'border-primary' 
                       : 'border-border hover:border-primary/50'
                   }`}
                 >
-                  <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img src={img} alt={`View ${idx + 1}`} className="w-full h-full object-contain p-2 bg-muted/30" />
                 </button>
               ))}
             </div>
           </div>
 
           {/* Right: Product Info */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <Badge variant="outline" className="mb-3">
+              <Badge variant="secondary" className="mb-3">
                 <Leaf className="w-3 h-3 mr-1" />
                 {selectedProduct.category}
               </Badge>
-              <h1 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
+              <h1 className="text-3xl font-bold text-foreground mb-3">
                 {selectedProduct.name}
               </h1>
               
               {/* Rating */}
               {selectedProduct.rating && (
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="flex">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex gap-0.5">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-5 w-5 ${
+                        className={`h-4 w-4 ${
                           i < Math.floor(selectedProduct.rating!)
                             ? 'fill-primary text-primary'
                             : 'text-muted'
@@ -153,81 +146,65 @@ const ProductDetailPage = () => {
                       />
                     ))}
                   </div>
-                  <span className="text-sm font-medium text-muted-foreground">
+                  <span className="text-sm text-muted-foreground">
                     {selectedProduct.rating} ({selectedProduct.reviews} reviews)
                   </span>
                 </div>
               )}
             </div>
 
-            <Separator />
-
             {/* Price */}
-            <div className="flex items-baseline gap-4">
-              <span className="text-5xl font-bold text-primary">
+            <div className="flex items-center gap-3">
+              <span className="text-4xl font-bold text-primary">
                 ${selectedProduct.price.toFixed(2)}
               </span>
-              <span className="text-xl text-muted-foreground line-through">
+              <span className="text-lg text-muted-foreground line-through">
                 ${(selectedProduct.price * 1.25).toFixed(2)}
               </span>
-              <Badge variant="destructive">20% OFF</Badge>
+              <Badge variant="destructive" className="text-xs">20% OFF</Badge>
             </div>
 
             {/* Description */}
-            <p className="text-muted-foreground text-lg leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed">
               {selectedProduct.description}
             </p>
 
             {/* Features */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Check className="h-4 w-4 text-primary" />
-                </div>
-                <span className="text-foreground">100% Organic</span>
+            <div className="grid grid-cols-3 gap-3 py-4">
+              <div className="text-center p-3 rounded-lg bg-muted/30">
+                <Check className="h-5 w-5 text-primary mx-auto mb-1" />
+                <p className="text-xs font-medium">100% Organic</p>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Award className="h-4 w-4 text-primary" />
-                </div>
-                <span className="text-foreground">Premium Quality</span>
+              <div className="text-center p-3 rounded-lg bg-muted/30">
+                <Truck className="h-5 w-5 text-primary mx-auto mb-1" />
+                <p className="text-xs font-medium">Free Delivery</p>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Leaf className="h-4 w-4 text-primary" />
-                </div>
-                <span className="text-foreground">Farm Fresh</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Clock className="h-4 w-4 text-primary" />
-                </div>
-                <span className="text-foreground">Same Day Delivery</span>
+              <div className="text-center p-3 rounded-lg bg-muted/30">
+                <Shield className="h-5 w-5 text-primary mx-auto mb-1" />
+                <p className="text-xs font-medium">Secure Pay</p>
               </div>
             </div>
 
-            <Separator />
-
             {/* Quantity Selector */}
             <div className="flex items-center gap-4">
-              <span className="text-sm font-semibold">Quantity:</span>
+              <span className="text-sm font-medium">Quantity:</span>
               <div className="flex items-center border border-border rounded-lg">
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   onClick={decrementQuantity}
-                  className="rounded-r-none"
+                  className="h-9 px-3 rounded-r-none"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <div className="w-16 text-center font-semibold border-x border-border py-2">
+                <div className="w-14 text-center font-medium border-x border-border h-9 flex items-center justify-center">
                   {quantity}
                 </div>
                 <Button
                   variant="ghost"
-                  size="icon"
+                  size="sm"
                   onClick={incrementQuantity}
-                  className="rounded-l-none"
+                  className="h-9 px-3 rounded-l-none"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -235,38 +212,37 @@ const ProductDetailPage = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 pt-4">
+            <div className="flex gap-3">
               <Button 
                 size="lg" 
                 onClick={handleAddToCart}
-                className="flex-1 h-14 text-base font-semibold"
+                className="flex-1"
               >
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart - ${(selectedProduct.price * quantity).toFixed(2)}
+                Add ${(selectedProduct.price * quantity).toFixed(2)}
               </Button>
               <Button 
                 size="lg" 
                 variant="outline"
                 onClick={handleAddToWishlist}
-                className="h-14 px-6"
               >
                 <Heart className="h-5 w-5" />
               </Button>
             </div>
 
-            {/* Additional Info */}
-            <Card className="bg-muted/50 border-none p-6">
-              <div className="space-y-3 text-sm">
+            {/* Product Details */}
+            <Card className="bg-muted/30 border p-4">
+              <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">SKU:</span>
-                  <span className="font-medium">{selectedProduct.id.toUpperCase()}</span>
+                  <span className="text-muted-foreground">SKU</span>
+                  <span className="font-medium">#{selectedProduct.id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Availability:</span>
-                  <span className="font-medium text-primary">In Stock</span>
+                  <span className="text-muted-foreground">Status</span>
+                  <Badge variant="default" className="h-5 text-xs">In Stock</Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Category:</span>
+                  <span className="text-muted-foreground">Category</span>
                   <span className="font-medium capitalize">{selectedProduct.category}</span>
                 </div>
               </div>
@@ -274,44 +250,44 @@ const ProductDetailPage = () => {
           </div>
         </div>
 
-        {/* Related Products Carousel */}
+        {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="space-y-8">
-            <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold">You May Also Like</h2>
-              <p className="text-muted-foreground">Discover more products from our organic collection</p>
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">You May Also Like</h2>
+              <p className="text-muted-foreground text-sm">Similar products from our collection</p>
             </div>
 
-            <Carousel className="w-full max-w-6xl mx-auto">
+            <Carousel className="w-full">
               <CarouselContent className="-ml-4">
                 {relatedProducts.map((product) => (
-                  <CarouselItem key={product.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                  <CarouselItem key={product.id} className="pl-4 md:basis-1/2 lg:basis-1/4">
                     <Card 
-                      className="group cursor-pointer overflow-hidden border-2 hover:border-primary transition-all hover:shadow-xl"
+                      className="group cursor-pointer overflow-hidden hover:shadow-lg transition-all border hover:border-primary"
                       onClick={() => handleProductClick(product)}
                     >
-                      <div className="aspect-square bg-muted relative overflow-hidden">
+                      <div className="aspect-square bg-muted/20 relative overflow-hidden">
                         <img
                           src={product.image}
                           alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          className="w-full h-full object-contain p-6 transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
-                      <div className="p-5 space-y-3">
-                        <Badge variant="secondary" className="text-xs">
+                      <div className="p-4 space-y-2">
+                        <Badge variant="secondary" className="text-xs mb-1">
                           {product.category}
                         </Badge>
-                        <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                        <h3 className="font-semibold text-sm group-hover:text-primary transition-colors line-clamp-2">
                           {product.name}
                         </h3>
                         <div className="flex items-center justify-between">
-                          <span className="text-2xl font-bold text-primary">
+                          <span className="text-lg font-bold text-primary">
                             ${product.price.toFixed(2)}
                           </span>
                           {product.rating && (
                             <div className="flex items-center gap-1">
-                              <Star className="h-4 w-4 fill-primary text-primary" />
-                              <span className="text-sm font-medium">{product.rating}</span>
+                              <Star className="h-3 w-3 fill-primary text-primary" />
+                              <span className="text-xs font-medium">{product.rating}</span>
                             </div>
                           )}
                         </div>
@@ -320,8 +296,8 @@ const ProductDetailPage = () => {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="left-0" />
-              <CarouselNext className="right-0" />
+              <CarouselPrevious className="-left-4" />
+              <CarouselNext className="-right-4" />
             </Carousel>
           </div>
         )}

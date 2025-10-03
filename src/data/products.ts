@@ -1,11 +1,23 @@
 import { Product } from '@/contexts/CartContext';
+import tomatoesImg from '@/assets/product-tomatoes.jpg';
+import spinachImg from '@/assets/product-spinach.jpg';
+import carrotsImg from '@/assets/product-carrots.jpg';
+import peppersImg from '@/assets/product-peppers.jpg';
+import applesImg from '@/assets/product-apples.jpg';
+import strawberriesImg from '@/assets/product-strawberries.jpg';
+import bananasImg from '@/assets/product-bananas.jpg';
+import berriesImg from '@/assets/product-berries.jpg';
+import milkImg from '@/assets/product-milk.jpg';
+import yogurtImg from '@/assets/product-yogurt.jpg';
+import cheeseImg from '@/assets/product-cheese.jpg';
+import butterImg from '@/assets/product-butter.jpg';
 
 export const products: Product[] = [
   {
     id: '1',
     name: 'Organic Tomatoes',
     price: 4.99,
-    image: '/placeholder.svg',
+    image: tomatoesImg,
     category: 'vegetables',
     description: 'Fresh, vine-ripened organic tomatoes. Perfect for salads and cooking.',
     inStock: true,
@@ -16,7 +28,7 @@ export const products: Product[] = [
     id: '2',
     name: 'Fresh Spinach',
     price: 3.49,
-    image: '/placeholder.svg',
+    image: spinachImg,
     category: 'vegetables',
     description: 'Nutrient-rich organic spinach leaves, freshly harvested.',
     inStock: true,
@@ -27,7 +39,7 @@ export const products: Product[] = [
     id: '3',
     name: 'Organic Carrots',
     price: 2.99,
-    image: '/placeholder.svg',
+    image: carrotsImg,
     category: 'vegetables',
     description: 'Sweet and crunchy organic carrots, grown without pesticides.',
     inStock: true,
@@ -38,7 +50,7 @@ export const products: Product[] = [
     id: '4',
     name: 'Bell Peppers Mix',
     price: 5.99,
-    image: '/placeholder.svg',
+    image: peppersImg,
     category: 'vegetables',
     description: 'Colorful mix of organic bell peppers - red, yellow, and green.',
     inStock: true,
@@ -49,7 +61,7 @@ export const products: Product[] = [
     id: '5',
     name: 'Organic Apples',
     price: 6.99,
-    image: '/placeholder.svg',
+    image: applesImg,
     category: 'fruits',
     description: 'Crisp and sweet organic apples. Great for snacking.',
     inStock: true,
@@ -60,7 +72,7 @@ export const products: Product[] = [
     id: '6',
     name: 'Fresh Strawberries',
     price: 7.99,
-    image: '/placeholder.svg',
+    image: strawberriesImg,
     category: 'fruits',
     description: 'Juicy organic strawberries, picked at peak ripeness.',
     inStock: true,
@@ -71,7 +83,7 @@ export const products: Product[] = [
     id: '7',
     name: 'Organic Bananas',
     price: 3.99,
-    image: '/placeholder.svg',
+    image: bananasImg,
     category: 'fruits',
     description: 'Naturally sweet organic bananas, perfect for smoothies.',
     inStock: true,
@@ -82,7 +94,7 @@ export const products: Product[] = [
     id: '8',
     name: 'Mixed Berries',
     price: 8.99,
-    image: '/placeholder.svg',
+    image: berriesImg,
     category: 'fruits',
     description: 'Organic blueberries, raspberries, and blackberries.',
     inStock: true,
@@ -93,7 +105,7 @@ export const products: Product[] = [
     id: '9',
     name: 'Organic Milk',
     price: 5.49,
-    image: '/placeholder.svg',
+    image: milkImg,
     category: 'dairy',
     description: 'Fresh organic whole milk from grass-fed cows.',
     inStock: true,
@@ -104,7 +116,7 @@ export const products: Product[] = [
     id: '10',
     name: 'Greek Yogurt',
     price: 4.99,
-    image: '/placeholder.svg',
+    image: yogurtImg,
     category: 'dairy',
     description: 'Creamy organic Greek yogurt, high in protein.',
     inStock: true,
@@ -115,7 +127,7 @@ export const products: Product[] = [
     id: '11',
     name: 'Artisan Cheese',
     price: 9.99,
-    image: '/placeholder.svg',
+    image: cheeseImg,
     category: 'dairy',
     description: 'Handcrafted organic cheese, aged to perfection.',
     inStock: true,
@@ -126,7 +138,7 @@ export const products: Product[] = [
     id: '12',
     name: 'Organic Butter',
     price: 6.49,
-    image: '/placeholder.svg',
+    image: butterImg,
     category: 'dairy',
     description: 'Rich and creamy organic butter from grass-fed cows.',
     inStock: true,
